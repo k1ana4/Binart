@@ -1,0 +1,13 @@
+{
+  "name": "Pixel Binary Lab",
+  "short_name": "PixelBinary",
+  "start_url": "./pixel-binary-lab.html",
+  "display": "standalone",
+  "background_color": "#fff5f8",
+  "theme_color": "#ffb8d1",
+  "icons": [
+  { "src": "icon.png", "sizes": "192x192", "type": "image/png" },
+  { "src": "icon-512.png", "sizes": "512x512", "type": "image/png" }
+]
+  
+}

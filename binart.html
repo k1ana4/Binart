@@ -1,0 +1,1126 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<link rel="manifest" href="manifest.json" />
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>🌸 Binart 🌸</title>
+<link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800;900&family=Fredoka+One&display=swap" rel="stylesheet" />
+<style>
+  :root {
+    --pink:    #ffb8d1;
+    --peach:   #ffd6b0;
+    --lavender:#d8b8ff;
+    --mint:    #b8f0d8;
+    --sky:     #b8e0ff;
+    --yellow:  #fff0a8;
+    --white:   #fffaf8;
+    --offwhite:#fff5f8;
+    --card:    #ffffff;
+    --text:    #5a3e6b;
+    --subtext: #9c7fb5;
+    --border:  #e8d5f5;
+    --shadow:  rgba(180,130,220,0.18);
+    --radius:  20px;
+    --radius-sm: 12px;
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    font-family: 'Nunito', sans-serif;
+    background: var(--offwhite);
+    background-image:
+      radial-gradient(circle at 15% 20%, #ffd6e8 0%, transparent 40%),
+      radial-gradient(circle at 85% 10%, #d8e8ff 0%, transparent 40%),
+      radial-gradient(circle at 50% 90%, #e8d8ff 0%, transparent 40%);
+    min-height: 100vh;
+    color: var(--text);
+  }
+
+  /* ── FLOATING DECO ── */
+  .deco {
+    position: fixed;
+    pointer-events: none;
+    font-size: 28px;
+    opacity: 0.18;
+    animation: float 6s ease-in-out infinite;
+    z-index: 0;
+  }
+  .deco:nth-child(1) { top:5%;  left:3%;  animation-delay:0s; }
+  .deco:nth-child(2) { top:15%; right:4%; animation-delay:1s; }
+  .deco:nth-child(3) { top:55%; left:1%; animation-delay:2s; }
+  .deco:nth-child(4) { top:70%; right:3%; animation-delay:0.5s; }
+  .deco:nth-child(5) { top:85%; left:6%; animation-delay:1.5s; }
+  @keyframes float {
+    0%,100%{ transform: translateY(0) rotate(-5deg); }
+    50%    { transform: translateY(-14px) rotate(5deg); }
+  }
+
+  /* ── APP SHELL ── */
+  .app {
+    position: relative;
+    z-index: 1;
+    max-width: 640px;
+    margin: 0 auto;
+    padding: 20px 16px 40px;
+  }
+
+  /* ── HEADER ── */
+  .header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 18px;
+  }
+
+  .logo {
+    font-family: 'Fredoka One', cursive;
+    font-size: 26px;
+    color: var(--text);
+    line-height: 1;
+  }
+  .logo .emoji { font-size: 22px; }
+  .logo .sub {
+    font-family: 'Nunito', sans-serif;
+    font-size: 11px;
+    font-weight: 700;
+    color: var(--subtext);
+    letter-spacing: 0.5px;
+    display: block;
+    margin-top: 2px;
+  }
+
+  .header-pills {
+    display: flex;
+    gap: 8px;
+    align-items: center;
+  }
+
+  .pill {
+    font-family: 'Fredoka One', cursive;
+    font-size: 13px;
+    padding: 6px 14px;
+    border-radius: 30px;
+    border: 2.5px solid transparent;
+    cursor: pointer;
+    transition: all 0.18s;
+  }
+  .pill-lvl {
+    background: var(--lavender);
+    color: #6a3eaa;
+    border-color: #c8a0f0;
+  }
+  .pill-help {
+    background: var(--pink);
+    color: #a03060;
+    border-color: #f0a0c0;
+  }
+  .pill-help:hover { transform: scale(1.08); }
+  .pill-lvl:hover  { transform: scale(1.08); }
+
+  /* ── PROGRESS ── */
+  .progress-wrap {
+    background: #f0e6f8;
+    border-radius: 30px;
+    height: 12px;
+    margin-bottom: 14px;
+    overflow: hidden;
+    border: 2px solid var(--border);
+  }
+  .progress-fill {
+    height: 100%;
+    border-radius: 30px;
+    background: linear-gradient(90deg, #f9b8d8, #c8a0f0, #a0c8ff);
+    transition: width 0.5s cubic-bezier(.34,1.56,.64,1);
+  }
+
+  .stats-row {
+    display: flex;
+    gap: 8px;
+    margin-bottom: 18px;
+    flex-wrap: wrap;
+  }
+  .stat-chip {
+    background: var(--card);
+    border: 2px solid var(--border);
+    border-radius: 30px;
+    padding: 5px 14px;
+    font-size: 13px;
+    font-weight: 700;
+    color: var(--subtext);
+    display: flex;
+    align-items: center;
+    gap: 5px;
+  }
+  .stat-chip .val { color: var(--text); }
+
+  /* ── CARD ── */
+  .card {
+    background: var(--card);
+    border-radius: var(--radius);
+    border: 2.5px solid var(--border);
+    padding: 22px;
+    margin-bottom: 14px;
+    box-shadow: 0 4px 24px var(--shadow);
+  }
+
+  /* ── SCREENS ── */
+  .screen { display: none; }
+  .screen.active { display: block; }
+
+  /* ── LESSON ── */
+  .lesson-title {
+    font-family: 'Fredoka One', cursive;
+    font-size: 20px;
+    color: var(--text);
+    margin-bottom: 10px;
+  }
+  .lesson-body {
+    font-size: 15px;
+    font-weight: 600;
+    color: var(--subtext);
+    line-height: 1.75;
+    margin-bottom: 16px;
+  }
+  .lesson-hint {
+    background: var(--yellow);
+    border-radius: var(--radius-sm);
+    border: 2px solid #f0d870;
+    padding: 10px 14px;
+    font-size: 14px;
+    font-weight: 700;
+    color: #806000;
+    margin-bottom: 16px;
+  }
+
+  /* COLOR TABLE */
+  .color-table {
+    width: 100%;
+    border-collapse: separate;
+    border-spacing: 0 6px;
+    margin-bottom: 6px;
+  }
+  .color-table thead th {
+    font-size: 11px;
+    font-weight: 800;
+    text-transform: uppercase;
+    letter-spacing: 0.8px;
+    color: var(--subtext);
+    padding: 0 10px 4px;
+    text-align: left;
+  }
+  .color-table tbody tr td {
+    background: #fdf6ff;
+    padding: 9px 10px;
+    font-size: 14px;
+    font-weight: 700;
+    vertical-align: middle;
+  }
+  .color-table tbody tr td:first-child { border-radius: 12px 0 0 12px; }
+  .color-table tbody tr td:last-child  { border-radius: 0 12px 12px 0; }
+
+  .swatch {
+    display: inline-block;
+    width: 20px; height: 20px;
+    border-radius: 6px;
+    border: 2px solid rgba(0,0,0,0.1);
+    vertical-align: middle;
+    margin-right: 8px;
+  }
+
+  .bin-tag {
+    font-family: 'Fredoka One', cursive;
+    font-size: 13px;
+    background: var(--lavender);
+    color: #5a2a9a;
+    padding: 4px 10px;
+    border-radius: 8px;
+    letter-spacing: 2px;
+  }
+
+  .mnem {
+    font-size: 12px;
+    font-weight: 600;
+    color: #b090d0;
+  }
+
+  /* ── BUTTONS ── */
+  .btn-primary {
+    font-family: 'Fredoka One', cursive;
+    font-size: 17px;
+    background: linear-gradient(135deg, #f9b8d8 0%, #c8a0f0 100%);
+    color: white;
+    border: none;
+    border-radius: 30px;
+    padding: 13px 34px;
+    cursor: pointer;
+    box-shadow: 0 4px 14px rgba(200,140,240,0.4);
+    transition: all 0.18s;
+    display: block;
+    margin: 0 auto;
+  }
+  .btn-primary:hover { transform: translateY(-2px) scale(1.04); box-shadow: 0 8px 20px rgba(200,140,240,0.5); }
+  .btn-primary:active { transform: scale(0.97); }
+
+  .btn-secondary {
+    font-family: 'Fredoka One', cursive;
+    font-size: 14px;
+    background: var(--card);
+    color: var(--subtext);
+    border: 2.5px solid var(--border);
+    border-radius: 30px;
+    padding: 8px 20px;
+    cursor: pointer;
+    transition: all 0.15s;
+  }
+  .btn-secondary:hover { background: #f8f0ff; border-color: #c8a0f0; }
+
+  /* ── PIXEL GRIDS ── */
+  .grids-row {
+    display: flex;
+    gap: 16px;
+    align-items: flex-start;
+    justify-content: center;
+    flex-wrap: wrap;
+    margin-bottom: 14px;
+  }
+
+  .grid-block { text-align: center; }
+  .grid-label {
+    font-size: 11px;
+    font-weight: 800;
+    color: var(--subtext);
+    text-transform: uppercase;
+    letter-spacing: 0.7px;
+    margin-bottom: 8px;
+  }
+
+  .pixel-grid {
+    display: grid;
+    gap: 4px;
+    width: fit-content;
+    margin: 0 auto;
+  }
+
+  .pixel {
+    border-radius: 8px;
+    cursor: pointer;
+    border: 3px solid rgba(255,255,255,0.6);
+    transition: all 0.15s cubic-bezier(.34,1.56,.64,1);
+    position: relative;
+    outline: none;
+  }
+  .pixel:hover { transform: scale(1.14); border-color: #c8a0f0; box-shadow: 0 4px 12px rgba(180,100,240,0.3); }
+  .pixel.selected { border-color: #f070b0 !important; transform: scale(1.12); box-shadow: 0 0 0 3px #ffd0e8; }
+  .pixel.correct  { border-color: #80e0a0 !important; }
+  .pixel.done     { cursor: default; }
+  .pixel.done:hover { transform: none; }
+
+  /* ── INPUT PANEL ── */
+  .input-panel {
+    transition: opacity 0.2s, transform 0.2s;
+  }
+  .input-panel.hidden { opacity: 0.35; pointer-events: none; }
+
+  .input-label {
+    font-size: 12px;
+    font-weight: 800;
+    color: var(--subtext);
+    text-transform: uppercase;
+    letter-spacing: 0.7px;
+    margin-bottom: 8px;
+  }
+
+  .binary-display {
+    background: #f8f0ff;
+    border: 2.5px solid #e0c8f8;
+    border-radius: var(--radius-sm);
+    padding: 12px 16px;
+    font-family: 'Fredoka One', cursive;
+    font-size: 22px;
+    letter-spacing: 5px;
+    color: var(--text);
+    margin-bottom: 12px;
+    min-height: 52px;
+    display: flex;
+    align-items: center;
+    gap: 1px;
+  }
+  .bit { transition: all 0.1s; }
+  .bit.on  { color: #b060f0; }
+  .bit.off { color: #c8a0f0; }
+  .bit.empty { color: #e0d0f0; }
+  .sep { color: #e0c8f8; font-size: 14px; margin: 0 3px; }
+
+  .btn-row {
+    display: flex;
+    gap: 10px;
+    align-items: center;
+    flex-wrap: wrap;
+  }
+
+  .bit-btn {
+    font-family: 'Fredoka One', cursive;
+    font-size: 24px;
+    width: 58px; height: 58px;
+    border-radius: 16px;
+    border: 3px solid;
+    cursor: pointer;
+    transition: all 0.15s cubic-bezier(.34,1.56,.64,1);
+    display: flex; align-items: center; justify-content: center;
+  }
+  .bit-btn:hover  { transform: scale(1.1) translateY(-2px); }
+  .bit-btn:active { transform: scale(0.94); }
+
+  .btn-zero {
+    background: var(--sky);
+    border-color: #90c8f8;
+    color: #2060a0;
+  }
+  .btn-one {
+    background: var(--pink);
+    border-color: #f090c0;
+    color: #a02060;
+  }
+  .btn-del {
+    font-family: 'Nunito', sans-serif;
+    font-size: 13px; font-weight: 800;
+    background: var(--peach);
+    border-color: #f0b880;
+    color: #803010;
+    width: auto;
+    padding: 0 16px;
+  }
+  .btn-submit {
+    font-family: 'Fredoka One', cursive;
+    font-size: 15px;
+    background: linear-gradient(135deg, #f9b8d8, #c8a0f0);
+    color: white;
+    border: none;
+    border-radius: 16px;
+    padding: 0 20px;
+    height: 58px;
+    cursor: pointer;
+    box-shadow: 0 4px 12px rgba(200,140,240,0.4);
+    transition: all 0.15s;
+    margin-left: auto;
+  }
+  .btn-submit:hover { transform: translateY(-2px); box-shadow: 0 6px 16px rgba(200,140,240,0.5); }
+
+  /* ── FEEDBACK ── */
+  .feedback {
+    border-radius: var(--radius-sm);
+    padding: 12px 16px;
+    font-size: 14px;
+    font-weight: 700;
+    margin-top: 10px;
+    display: none;
+    animation: popIn 0.25s cubic-bezier(.34,1.56,.64,1);
+  }
+  .feedback.correct {
+    display: block;
+    background: #d8f8e8;
+    border: 2.5px solid #80e0a0;
+    color: #1a6a3a;
+  }
+  .feedback.wrong {
+    display: block;
+    background: #ffd8e0;
+    border: 2.5px solid #f0a0b0;
+    color: #8a2030;
+  }
+  @keyframes popIn {
+    from { transform: scale(0.9); opacity: 0; }
+    to   { transform: scale(1);   opacity: 1; }
+  }
+
+  .hint-micro {
+    font-size: 13px;
+    font-weight: 600;
+    color: #c0a0d8;
+    margin-top: 8px;
+    min-height: 20px;
+  }
+
+  /* ── LEVEL SELECT ── */
+  .level-title {
+    font-family: 'Fredoka One', cursive;
+    font-size: 22px;
+    color: var(--text);
+    text-align: center;
+    margin-bottom: 18px;
+  }
+  .level-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 10px;
+    margin-bottom: 18px;
+  }
+  .level-card {
+    background: var(--card);
+    border: 2.5px solid var(--border);
+    border-radius: var(--radius);
+    padding: 16px 10px;
+    text-align: center;
+    cursor: pointer;
+    transition: all 0.18s cubic-bezier(.34,1.56,.64,1);
+  }
+  .level-card:hover:not(.locked) { transform: translateY(-4px); box-shadow: 0 8px 20px var(--shadow); border-color: #c8a0f0; }
+  .level-card.locked   { opacity: 0.45; cursor: not-allowed; }
+  .level-card.completed { border-color: #80e0a0; background: #f0fff6; }
+
+  .lcard-num {
+    font-family: 'Fredoka One', cursive;
+    font-size: 28px;
+    color: var(--text);
+    line-height: 1;
+    margin-bottom: 4px;
+  }
+  .lcard-name {
+    font-size: 11px;
+    font-weight: 800;
+    color: var(--subtext);
+    line-height: 1.4;
+    margin-bottom: 6px;
+  }
+  .lcard-stars { font-size: 16px; }
+
+  /* ── WIN ── */
+  .win-wrap {
+    text-align: center;
+    padding: 20px 0;
+  }
+  .win-emoji { font-size: 64px; margin-bottom: 12px; animation: spin 2s ease infinite; }
+  @keyframes spin { 0%,100%{transform:rotate(-8deg) scale(1)} 50%{transform:rotate(8deg) scale(1.1)} }
+  .win-title {
+    font-family: 'Fredoka One', cursive;
+    font-size: 32px;
+    color: var(--text);
+    margin-bottom: 8px;
+  }
+  .win-sub {
+    font-size: 15px;
+    font-weight: 600;
+    color: var(--subtext);
+    margin-bottom: 24px;
+    line-height: 1.7;
+  }
+
+  /* ── MODAL ── */
+  .modal-bg {
+    display: none;
+    position: fixed; inset: 0;
+    background: rgba(100,50,150,0.25);
+    backdrop-filter: blur(6px);
+    z-index: 100;
+    align-items: center;
+    justify-content: center;
+    padding: 16px;
+  }
+  .modal-bg.open { display: flex; }
+  .modal {
+    background: var(--card);
+    border-radius: var(--radius);
+    border: 2.5px solid var(--border);
+    box-shadow: 0 16px 48px rgba(150,80,220,0.25);
+    padding: 24px;
+    width: 100%;
+    max-width: 380px;
+    max-height: 85vh;
+    overflow-y: auto;
+    animation: popIn 0.25s cubic-bezier(.34,1.56,.64,1);
+  }
+  .modal-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 16px;
+  }
+  .modal-title {
+    font-family: 'Fredoka One', cursive;
+    font-size: 20px;
+    color: var(--text);
+  }
+  .modal-close {
+    font-family: 'Fredoka One', cursive;
+    font-size: 13px;
+    background: var(--pink);
+    color: #a02060;
+    border: 2px solid #f0a0c0;
+    border-radius: 20px;
+    padding: 5px 14px;
+    cursor: pointer;
+  }
+  .modal-close:hover { background: #f090b0; }
+
+  .modal-note {
+    font-size: 13px;
+    font-weight: 600;
+    color: var(--subtext);
+    margin-top: 14px;
+    line-height: 1.7;
+    background: var(--yellow);
+    border-radius: var(--radius-sm);
+    padding: 10px 14px;
+    border: 2px solid #f0d870;
+    color: #806000;
+  }
+
+  /* ── NEXT BTN ── */
+  .next-btn {
+    font-family: 'Fredoka One', cursive;
+    font-size: 16px;
+    background: linear-gradient(135deg, #b8f0d8, #90d8f8);
+    color: #1a6a3a;
+    border: none;
+    border-radius: 30px;
+    padding: 13px 30px;
+    cursor: pointer;
+    box-shadow: 0 4px 14px rgba(80,200,140,0.3);
+    transition: all 0.18s;
+    display: none;
+    margin-top: 12px;
+  }
+  .next-btn.show { display: inline-block; }
+  .next-btn:hover { transform: translateY(-2px) scale(1.04); }
+
+  .action-row {
+    display: flex;
+    gap: 10px;
+    align-items: center;
+    flex-wrap: wrap;
+    margin-top: 12px;
+  }
+</style>
+</head>
+<body>
+
+<!-- Floating deco -->
+<div class="deco">🌸</div>
+<div class="deco">⭐</div>
+<div class="deco">🍬</div>
+<div class="deco">💜</div>
+<div class="deco">🌷</div>
+
+<div class="app">
+
+  <!-- HEADER -->
+  <div class="header">
+    <div class="logo">
+      <span class="emoji">🌸</span> Binart
+      <span class="sub">learn colors in binary!</span>
+    </div>
+    <div class="header-pills">
+      <button class="pill pill-lvl" onclick="showLevelSelect()">Levels ✨</button>
+      <button class="pill pill-help" onclick="openCheatSheet()">? Help</button>
+    </div>
+  </div>
+
+  <!-- PROGRESS -->
+  <div class="progress-wrap">
+    <div class="progress-fill" id="progressBar" style="width:0%"></div>
+  </div>
+
+  <div class="stats-row">
+    <div class="stat-chip">⭐ <span class="val" id="scoreDisplay">0</span> pts</div>
+    <div class="stat-chip">🎨 <span class="val" id="pixelsDone">0/0</span> pixels</div>
+    <div class="stat-chip">🌸 Level <span class="val" id="levelDisplay">1</span></div>
+  </div>
+
+  <!-- ══ LESSON SCREEN ══ -->
+  <div class="screen active" id="lessonScreen">
+    <div class="card">
+      <div class="lesson-title" id="lessonTitle">Lesson 1: Primary Colors 🎨</div>
+      <div class="lesson-body" id="lessonBody"></div>
+      <div class="lesson-hint" id="lessonHint"></div>
+      <table class="color-table">
+        <thead><tr><th>Color</th><th>Binary Code</th><th>Memory Tip</th></tr></thead>
+        <tbody id="lessonTableBody"></tbody>
+      </table>
+    </div>
+    <button class="btn-primary" onclick="startGame()">Start Painting 🖌️</button>
+  </div>
+
+  <!-- ══ LEVEL SELECT SCREEN ══ -->
+  <div class="screen" id="levelSelectScreen">
+    <div class="card">
+      <div class="level-title">Choose a Level ✨</div>
+      <div class="level-grid" id="levelGrid"></div>
+      <div style="text-align:center;">
+        <button class="btn-secondary" onclick="showLesson()">← Back to Lesson</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ══ GAME SCREEN ══ -->
+  <div class="screen" id="gameScreen">
+
+    <!-- Pixel grids -->
+    <div class="card">
+      <div class="grid-label" id="artName">Target — click a pixel!</div>
+      <div class="grids-row">
+        <div class="grid-block">
+          <div class="grid-label">🎯 Goal</div>
+          <div class="pixel-grid" id="targetGrid"></div>
+        </div>
+        <div class="grid-block">
+          <div class="grid-label">🖌️ Your Art</div>
+          <div class="pixel-grid" id="playerGrid"></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Input panel -->
+    <div class="card input-panel hidden" id="inputPanel">
+      <div class="input-label">🔢 Enter binary for pixel <span id="selCoord"></span></div>
+      <div class="binary-display" id="binaryDisplay"></div>
+      <div class="btn-row">
+        <button class="bit-btn btn-zero" onclick="addBit('0')">0</button>
+        <button class="bit-btn btn-one"  onclick="addBit('1')">1</button>
+        <button class="bit-btn btn-del"  onclick="delBit()">← Del</button>
+        <button class="btn-submit" onclick="submitBits()">Enter ✓</button>
+      </div>
+      <div class="hint-micro" id="hintMicro">Select a pixel above to get started ✨</div>
+    </div>
+
+    <div class="feedback" id="feedbackBox"></div>
+
+    <div class="action-row">
+      <button class="next-btn" id="nextBtn" onclick="nextLevel()">Next Level 🌸</button>
+      <button class="btn-secondary" onclick="showLevelSelect()">← Level Select</button>
+    </div>
+  </div>
+
+  <!-- ══ WIN SCREEN ══ -->
+  <div class="screen" id="winScreen">
+    <div class="card">
+      <div class="win-wrap">
+        <div class="win-emoji">🎉</div>
+        <div class="win-title">You did it!! 🌸</div>
+        <div class="win-sub">You've mastered binary colors!<br>All 6 levels complete. You're a pixel artist! 💜</div>
+        <button class="btn-primary" onclick="resetGame()">Play Again 🎮</button>
+      </div>
+    </div>
+  </div>
+
+</div><!-- /app -->
+
+<!-- CHEAT SHEET MODAL -->
+<div class="modal-bg" id="cheatModal">
+  <div class="modal">
+    <div class="modal-header">
+      <div class="modal-title">🌸 Color Cheat Sheet</div>
+      <button class="modal-close" onclick="closeCheatSheet()">Close ✕</button>
+    </div>
+    <table class="color-table">
+      <thead><tr><th>Color</th><th>Binary Code</th></tr></thead>
+      <tbody id="cheatTableBody"></tbody>
+    </table>
+    <div class="modal-note">
+      💡 Each code is 8 bits split into 3 pairs:<br>
+      <strong>RR GG BB</strong> — Red · Green · Blue<br>
+      <strong>11</strong> = fully ON &nbsp;|&nbsp; <strong>00</strong> = fully OFF
+    </div>
+  </div>
+</div>
+
+<script>
+// ──────────────────────────────────────────────────
+// DATA
+// ──────────────────────────────────────────────────
+const COLORS = {
+  black:   { bin:"00000000", hex:"#111111", label:"Black"   },
+  white:   { bin:"11111111", hex:"#ffffff", label:"White"   },
+  red:     { bin:"11000000", hex:"#ff5577", label:"Red"     },
+  green:   { bin:"00110000", hex:"#55cc88", label:"Green"   },
+  blue:    { bin:"00001100", hex:"#5599ff", label:"Blue"    },
+  yellow:  { bin:"11110000", hex:"#ffee55", label:"Yellow"  },
+  cyan:    { bin:"00111100", hex:"#55eeff", label:"Cyan"    },
+  magenta: { bin:"11001100", hex:"#ff66cc", label:"Magenta" },
+  orange:  { bin:"11010000", hex:"#ff9944", label:"Orange"  },
+  purple:  { bin:"10000100", hex:"#aa55ff", label:"Purple"  },
+  pink:    { bin:"11001000", hex:"#ffaacc", label:"Pink"    },
+  gray:    { bin:"10101010", hex:"#bbaacc", label:"Gray"    },
+  teal:    { bin:"00100100", hex:"#44ccbb", label:"Teal"    },
+  lavender:{ bin:"10100110", hex:"#cc99ff", label:"Lavender"},
+};
+
+const MNEMONICS = {
+  black:"All zeros = lights off 🌑",
+  white:"All ones = full brightness ☀️",
+  red:"11·00·00 — only Red on 🔴",
+  green:"00·11·00 — only Green on 🟢",
+  blue:"00·00·11 — only Blue on 🔵",
+  yellow:"11·11·00 — Red + Green 💛",
+  cyan:"00·11·11 — Green + Blue 🩵",
+  magenta:"11·00·11 — Red + Blue 💗",
+  orange:"11·01·00 — Red full, Green half 🟠",
+  purple:"10·00·01 — Red half, Blue tiny 💜",
+  pink:"11·00·10 — Red + tiny Blue 🩷",
+  gray:"10·10·10 — all channels at half 🩶",
+  teal:"00·10·10 — half Green + half Blue 🩵",
+  lavender:"10·10·01 — Red+Green half, Blue tiny 💜",
+};
+
+const LEVELS = [
+  {
+    id:1, name:"Red, Green & Blue", gridSize:3,
+    lessonTitle:"Lesson 1: The Three Primary Colors 🎨",
+    lessonBody:"Computers store colors as binary (1s and 0s)! Every color is made of three channels: Red, Green, and Blue (RGB). We use a simplified 8-bit system — each pair of bits controls one channel. '11' = FULLY ON, '00' = OFF.",
+    lessonHint:"💡 For this level, just remember 3 colors! Click a pixel in the Goal grid, then type its 8-bit code using the 0 and 1 buttons.",
+    colors:["red","green","blue","black"],
+    art:[
+      ["red","blue","green"],
+      ["blue","black","blue"],
+      ["green","blue","red"],
+    ],
+    artName:"Primary Colors 🌈",
+  },
+  {
+    id:2, name:"Black & White", gridSize:3,
+    lessonTitle:"Lesson 2: Black and White ⬛⬜",
+    lessonBody:"Black means ALL channels are OFF — every bit is 0! White means ALL channels are FULLY ON — every bit is 1! These are the two extremes of the binary color range.",
+    lessonHint:"💡 Draw the checkerboard! Black = 00000000, White = 11111111. Just 2 colors this time!",
+    colors:["black","white"],
+    art:[
+      ["white","black","white"],
+      ["black","white","black"],
+      ["white","black","white"],
+    ],
+    artName:"Checkerboard ✨",
+  },
+  {
+    id:3, name:"Mix Colors!", gridSize:4,
+    lessonTitle:"Lesson 3: Color Mixing — Yellow, Cyan & Magenta 🌈",
+    lessonBody:"What happens when you turn ON two channels at once?\n• Red + Green = Yellow  (11110000)\n• Green + Blue = Cyan    (00111100)\n• Red + Blue  = Magenta (11001100)\nMixing channels is how computers make millions of colors!",
+    lessonHint:"💡 A bigger 4×4 grid now! Use what you've learned — click each pixel and type its binary code.",
+    colors:["red","green","blue","yellow","cyan","magenta","white"],
+    art:[
+      ["red","yellow","green","cyan"],
+      ["yellow","white","white","blue"],
+      ["magenta","white","white","cyan"],
+      ["blue","magenta","red","yellow"],
+    ],
+    artName:"Color Wheel 🎡",
+  },
+  {
+    id:4, name:"Pixel Heart 💖", gridSize:5,
+    lessonTitle:"Lesson 4: Building Pixel Art — Heart 💖",
+    lessonBody:"Now you know the basics! Pixel art is built one pixel at a time. Each pixel is just a binary number telling the screen what color to show. Let's draw a heart using Red, Pink, and Black!",
+    lessonHint:"💡 Click each pixel and enter its code. Use the ? button any time for the cheat sheet!",
+    colors:["red","black","pink","white"],
+    art:[
+      ["black","red","black","red","black"],
+      ["red","pink","red","pink","red"],
+      ["red","red","red","red","red"],
+      ["black","red","red","red","black"],
+      ["black","black","red","black","black"],
+    ],
+    artName:"Pixel Heart 💖",
+  },
+  {
+    id:5, name:"Pastel Sunset 🌅", gridSize:5,
+    lessonTitle:"Lesson 5: Orange, Purple & Lavender 🌅",
+    lessonBody:"Orange and Purple need more complex mixing!\n• Orange  = Red FULL + Green HALF (11010000)\n• Purple  = Red HALF + Blue tiny   (10000100)\n• Lavender = soft Red + Green + tiny Blue (10100110)\n'Half-on' means a channel gets a middle value instead of full!",
+    lessonHint:"💡 This level uses all your color skills. Remember to open (?) if you get stuck!",
+    colors:["orange","purple","lavender","pink","yellow","blue","black"],
+    art:[
+      ["blue","purple","lavender","purple","blue"],
+      ["purple","orange","pink","orange","purple"],
+      ["orange","pink","yellow","pink","orange"],
+      ["orange","yellow","orange","yellow","orange"],
+      ["black","orange","orange","orange","black"],
+    ],
+    artName:"Pastel Sunset 🌅",
+  },
+  {
+    id:6, name:"Rainbow Diamond 💎", gridSize:6,
+    lessonTitle:"Lesson 6: Full Palette Master 🏆",
+    lessonBody:"You've learned everything! Gray uses ALL three channels at half power (10101010) — that's why it looks neutral. Teal (00100100) is half Green + half Blue with no Red. Now paint the final masterpiece using every color you know!",
+    lessonHint:"💡 Final level — 6×6 grid! You know all the codes. Go paint your masterpiece! 🎨",
+    colors:["red","green","blue","yellow","cyan","magenta","orange","purple","gray","teal","black","white","pink","lavender"],
+    art:[
+      ["red","orange","yellow","yellow","orange","red"],
+      ["orange","teal","cyan","cyan","teal","orange"],
+      ["yellow","cyan","white","white","cyan","yellow"],
+      ["yellow","cyan","white","white","cyan","yellow"],
+      ["orange","teal","cyan","cyan","teal","orange"],
+      ["red","orange","yellow","yellow","orange","red"],
+    ],
+    artName:"Rainbow Diamond 💎",
+  },
+];
+
+// ──────────────────────────────────────────────────
+// STATE
+// ──────────────────────────────────────────────────
+let currentLevel   = 0;
+let playerGrid     = [];
+let selectedPixel  = null;
+let currentBits    = "";
+let score          = 0;
+let unlockedLevels = [0];
+let completedLevels= [];
+
+// ──────────────────────────────────────────────────
+// HELPERS
+// ──────────────────────────────────────────────────
+function lv()     { return LEVELS[currentLevel]; }
+function col(n)   { return COLORS[n] || COLORS.black; }
+
+function showScreen(id) {
+  document.querySelectorAll(".screen").forEach(s => s.classList.remove("active"));
+  document.getElementById(id).classList.add("active");
+}
+
+function updateStats() {
+  document.getElementById("scoreDisplay").textContent = score;
+  document.getElementById("levelDisplay").textContent = lv().id;
+  const size = lv().gridSize;
+  let done = 0;
+  for (let r=0;r<size;r++) for(let c=0;c<size;c++) if(playerGrid[r]&&playerGrid[r][c]!==null) done++;
+  document.getElementById("pixelsDone").textContent = `${done}/${size*size}`;
+  const pct = (currentLevel/LEVELS.length)*100 + (done/(size*size))*(100/LEVELS.length);
+  document.getElementById("progressBar").style.width = Math.min(100,pct)+"%";
+}
+
+// ──────────────────────────────────────────────────
+// LESSON
+// ──────────────────────────────────────────────────
+function showLesson() {
+  const l = lv();
+  document.getElementById("lessonTitle").textContent = l.lessonTitle;
+  document.getElementById("lessonBody").textContent  = l.lessonBody;
+  document.getElementById("lessonHint").textContent  = l.lessonHint;
+
+  const tbody = document.getElementById("lessonTableBody");
+  tbody.innerHTML = "";
+  l.colors.forEach(name => {
+    const c = col(name);
+    const tr = document.createElement("tr");
+    tr.innerHTML = `
+      <td><span class="swatch" style="background:${c.hex}"></span>${c.label}</td>
+      <td><span class="bin-tag">${c.bin}</span></td>
+      <td class="mnem">${MNEMONICS[name]||""}</td>
+    `;
+    tbody.appendChild(tr);
+  });
+
+  updateStats();
+  showScreen("lessonScreen");
+}
+
+// ──────────────────────────────────────────────────
+// LEVEL SELECT
+// ──────────────────────────────────────────────────
+function showLevelSelect() {
+  const grid = document.getElementById("levelGrid");
+  grid.innerHTML = "";
+  LEVELS.forEach((l, i) => {
+    const unlocked  = unlockedLevels.includes(i);
+    const completed = completedLevels.includes(i);
+    const card = document.createElement("div");
+    card.className = `level-card ${unlocked?"":"locked"} ${completed?"completed":""}`;
+    card.innerHTML = `
+      <div class="lcard-num">${l.id}</div>
+      <div class="lcard-name">${l.name}</div>
+      <div class="lcard-stars">${completed?"⭐⭐⭐":unlocked?"☆☆☆":"🔒"}</div>
+    `;
+    if (unlocked) card.onclick = () => { currentLevel = i; showLesson(); };
+    grid.appendChild(card);
+  });
+  showScreen("levelSelectScreen");
+}
+
+// ──────────────────────────────────────────────────
+// GAME BUILD
+// ──────────────────────────────────────────────────
+function startGame() {
+  const l    = lv();
+  const size = l.gridSize;
+  playerGrid = Array.from({length:size},()=>Array(size).fill(null));
+  selectedPixel = null;
+  currentBits   = "";
+
+  document.getElementById("feedbackBox").className = "feedback";
+  document.getElementById("nextBtn").className      = "next-btn";
+  document.getElementById("inputPanel").classList.add("hidden");
+  document.getElementById("artName").textContent    = l.artName;
+  document.getElementById("hintMicro").textContent  = "Select a pixel above to get started ✨";
+  renderBinaryDisplay();
+
+  const cellSize = size<=3?50:size<=4?46:size<=5?42:36;
+  buildGrid("targetGrid", size, cellSize, (r,c)=>{
+    const p = document.createElement("div");
+    p.className = "pixel";
+    p.style.cssText=`width:${cellSize}px;height:${cellSize}px;background:${col(l.art[r][c]).hex};`;
+    p.dataset.r=r; p.dataset.c=c;
+    p.onclick = ()=>selectPixel(r,c);
+    return p;
+  });
+  buildGrid("playerGrid", size, cellSize, (r,c)=>{
+    const p = document.createElement("div");
+    p.className = "pixel";
+    p.id = `pp_${r}_${c}`;
+    p.style.cssText=`width:${cellSize}px;height:${cellSize}px;background:#f0e8f8;`;
+    p.onclick = ()=>selectPixel(r,c);
+    return p;
+  });
+
+  updateStats();
+  showScreen("gameScreen");
+}
+
+function buildGrid(id, size, cellSize, cellFn) {
+  const el = document.getElementById(id);
+  el.style.gridTemplateColumns = `repeat(${size},${cellSize}px)`;
+  el.innerHTML = "";
+  for(let r=0;r<size;r++) for(let c=0;c<size;c++) el.appendChild(cellFn(r,c));
+}
+
+// ──────────────────────────────────────────────────
+// PIXEL INTERACTION
+// ──────────────────────────────────────────────────
+function selectPixel(r,c) {
+  if(playerGrid[r]&&playerGrid[r][c]!==null){
+    showFeedback("correct",`Pixel (${r+1},${c+1}) is already painted correctly! 🌸`);
+    return;
+  }
+  selectedPixel = {r,c};
+  currentBits   = "";
+  renderBinaryDisplay();
+
+  // Highlight in target grid
+  document.querySelectorAll("#targetGrid .pixel").forEach(p=>p.classList.remove("selected"));
+  const idx = r*lv().gridSize+c;
+  document.querySelectorAll("#targetGrid .pixel")[idx].classList.add("selected");
+
+  document.getElementById("inputPanel").classList.remove("hidden");
+  document.getElementById("selCoord").textContent = `(${r+1},${c+1})`;
+  document.getElementById("hintMicro").textContent = `Type the 8-bit binary code for this pixel!`;
+  document.getElementById("feedbackBox").className = "feedback";
+}
+
+function addBit(b) {
+  if(currentBits.length>=8) return;
+  currentBits += b;
+  renderBinaryDisplay();
+  if(currentBits.length===8) document.getElementById("hintMicro").textContent="Press Enter to submit! ✨";
+}
+
+function delBit() {
+  currentBits = currentBits.slice(0,-1);
+  renderBinaryDisplay();
+  document.getElementById("hintMicro").textContent = "Type the 8-bit binary code for this pixel!";
+}
+
+function renderBinaryDisplay() {
+  const disp = document.getElementById("binaryDisplay");
+  let html = "";
+  for(let i=0;i<8;i++){
+    if(i>0&&i%2===0) html+=`<span class="sep">·</span>`;
+    if(i<currentBits.length){
+      html+=`<span class="bit ${currentBits[i]==="1"?"on":"off"}">${currentBits[i]}</span>`;
+    } else {
+      html+=`<span class="bit empty">_</span>`;
+    }
+  }
+  disp.innerHTML = html;
+}
+
+function submitBits() {
+  if(!selectedPixel){ document.getElementById("hintMicro").textContent="Select a pixel first!"; return; }
+  if(currentBits.length!==8){ document.getElementById("hintMicro").textContent=`Need ${8-currentBits.length} more bits!`; return; }
+
+  const {r,c}   = selectedPixel;
+  const colorName= lv().art[r][c];
+  const correct  = col(colorName).bin;
+  const pp       = document.getElementById(`pp_${r}_${c}`);
+  const idx      = r*lv().gridSize+c;
+  const tp       = document.querySelectorAll("#targetGrid .pixel")[idx];
+
+  if(currentBits===correct){
+    playerGrid[r][c] = colorName;
+    pp.style.background = col(colorName).hex;
+    pp.classList.add("correct","done");
+    tp.classList.remove("selected");
+    tp.classList.add("correct");
+    showFeedback("correct",`✅ Correct! ${currentBits} = ${col(colorName).label} 🌸`);
+    score += 10;
+    selectedPixel = null;
+    currentBits = "";
+    renderBinaryDisplay();
+    document.getElementById("inputPanel").classList.add("hidden");
+    updateStats();
+    checkLevelComplete();
+  } else {
+    showFeedback("wrong",`❌ Not quite! You typed ${currentBits}. The code for ${col(colorName).label} is ${correct}. Try again! 💪`);
+    tp.classList.remove("selected");
+    tp.classList.add("wrong");
+    setTimeout(()=>{ tp.classList.remove("wrong"); tp.classList.add("selected"); },900);
+    currentBits = "";
+    renderBinaryDisplay();
+    score = Math.max(0,score-2);
+    updateStats();
+  }
+}
+
+function showFeedback(type,msg){
+  const fb = document.getElementById("feedbackBox");
+  fb.className = `feedback ${type}`;
+  fb.textContent = msg;
+}
+
+function checkLevelComplete(){
+  const size=lv().gridSize;
+  for(let r=0;r<size;r++) for(let c=0;c<size;c++) if(!playerGrid[r]||playerGrid[r][c]===null) return;
+
+  if(!completedLevels.includes(currentLevel)) completedLevels.push(currentLevel);
+  if(currentLevel+1<LEVELS.length&&!unlockedLevels.includes(currentLevel+1)) unlockedLevels.push(currentLevel+1);
+
+  showFeedback("correct",`🎉 Level ${lv().id} complete! "${lv().artName}" is painted! Amazing work! 🌸`);
+  const nb = document.getElementById("nextBtn");
+  nb.className = "next-btn show";
+  nb.textContent = currentLevel+1<LEVELS.length ? "Next Level 🌸" : "Finish Game 🎉";
+  nb.onclick = currentLevel+1<LEVELS.length ? nextLevel : ()=>showScreen("winScreen");
+  updateStats();
+}
+
+function nextLevel(){
+  if(currentLevel+1<LEVELS.length){ currentLevel++; showLesson(); }
+  else showScreen("winScreen");
+}
+
+// ──────────────────────────────────────────────────
+// CHEAT SHEET
+// ──────────────────────────────────────────────────
+function openCheatSheet(){
+  const tbody = document.getElementById("cheatTableBody");
+  tbody.innerHTML="";
+  lv().colors.forEach(name=>{
+    const c=col(name);
+    const tr=document.createElement("tr");
+    tr.innerHTML=`
+      <td><span class="swatch" style="background:${c.hex}"></span>${c.label}</td>
+      <td><span class="bin-tag">${c.bin}</span></td>
+    `;
+    tbody.appendChild(tr);
+  });
+  document.getElementById("cheatModal").classList.add("open");
+}
+function closeCheatSheet(){ document.getElementById("cheatModal").classList.remove("open"); }
+
+// ──────────────────────────────────────────────────
+// RESET
+// ──────────────────────────────────────────────────
+function resetGame(){
+  currentLevel=0; score=0; unlockedLevels=[0]; completedLevels=[];
+  showLesson();
+}
+
+// INIT
+showLesson();
+</script>
+</body>
+</html>
